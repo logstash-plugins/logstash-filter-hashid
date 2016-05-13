@@ -41,6 +41,8 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   # Use the timestamp to generate an ID prefix
   config :add_timestamp_prefix, :validate => :boolean, :default => true
 
+  CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".freeze
+
   def register
     # convert to symbol for faster comparisons
     @method = @method.to_sym
@@ -48,13 +50,13 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   end
 
   def filter(event)
-    data = ""
-        
+    hmac = OpenSSL::HMAC.new(@key, @digest.new)
+
     @source.sort.each do |k|
-      data << "|#{k}|#{event[k]}"
+      hmac.update("|#{k}|#{event[k]}") 
     end
 
-    hash = OpenSSL::HMAC.digest(@digest, @key, data)
+    hash = hmac.digest
 
     if !@hash_bytes_used.nil? && @hash_bytes_used > 0 && hash.length > @hash_bytes_used
       hash = hash[(-1 * @hash_bytes_used), @hash_bytes_used]
@@ -63,7 +65,6 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
     epoch_array = []
     if @add_timestamp_prefix
       epoch = event[@timestamp_field].to_i
-      epoch_array = []
       epoch_array.push(epoch >> 24)
       epoch_array.push((epoch >> 16) % 256)
       epoch_array.push((epoch >> 8) % 256)
@@ -94,7 +95,6 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   end
 
   def encode_to_sortable_string(data)
-    chars = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
     encoded_string = ""
     offset = 0
     while offset < data.length do
@@ -108,10 +108,10 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
       end
 
       group24 = (buf[0] << 16) | (buf[1] << 8) | buf[2] # current 3 bytes as a 24 bit value
-      encoded = chars[(group24 >> 18) & 0x3f, 1] # read the 24 bit value 6 bits at a time
-      encoded << chars[(group24 >> 12) & 0x3f, 1]
-      encoded << chars[(group24 >> 6) & 0x3f, 1]
-      encoded << chars[(group24 >> 0) & 0x3f, 1]
+      encoded = CHARS[(group24 >> 18) & 0x3f, 1] # read the 24 bit value 6 bits at a time
+      encoded << CHARS[(group24 >> 12) & 0x3f, 1]
+      encoded << CHARS[(group24 >> 6) & 0x3f, 1]
+      encoded << CHARS[(group24 >> 0) & 0x3f, 1]
       encoded[4 - pad.length, pad.length] = pad # add the padding
       encoded_string << encoded
     end
