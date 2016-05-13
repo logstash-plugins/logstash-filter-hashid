@@ -41,7 +41,8 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   # Use the timestamp to generate an ID prefix
   config :add_timestamp_prefix, :validate => :boolean, :default => true
 
-  CHARS = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz".freeze
+  CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'.chars.to_a.freeze
+  SHIFTS = [18, 12, 6, 0].freeze
 
   def register
     # convert to symbol for faster comparisons
@@ -95,27 +96,21 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   end
 
   def encode_to_sortable_string(data)
-    encoded_string = ""
-    offset = 0
-    while offset < data.length do
-      buf = data[offset,3]
-      offset+=3
-
-      pad = '' # padding for this group of 4 characters
-      while buf.length < 3
-        buf.push(0)
-        pad << '='
+    idxes = []
+    to_take = 0
+    data.each_slice(3) do |part0, part1, part2|
+      to_take = 0
+      if part1.nil?
+        part1 = part2 = 0
+        to_take = 2
       end
-
-      group24 = (buf[0] << 16) | (buf[1] << 8) | buf[2] # current 3 bytes as a 24 bit value
-      encoded = CHARS[(group24 >> 18) & 0x3f, 1] # read the 24 bit value 6 bits at a time
-      encoded << CHARS[(group24 >> 12) & 0x3f, 1]
-      encoded << CHARS[(group24 >> 6) & 0x3f, 1]
-      encoded << CHARS[(group24 >> 0) & 0x3f, 1]
-      encoded[4 - pad.length, pad.length] = pad # add the padding
-      encoded_string << encoded
+      if part2.nil?
+        part2 = 0
+        to_take = 1
+      end
+      group24 = (part0 << 16) | (part1 << 8) | part2
+      idxes.concat(SHIFTS.map{|n| (group24 >> n) & 0x3f })
     end
-
-    encoded_string.tr('=','')
+    CHARS.values_at(*idxes.take(idxes.size - to_take)).join
   end
 end
