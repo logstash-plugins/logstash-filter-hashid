@@ -39,7 +39,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   config :hash_bytes_used, :validate => :number
 
   # Use the timestamp to generate an ID prefix
-  config :timestamp_prefix, :validate => :boolean, :default => true
+  config :add_timestamp_prefix, :validate => :boolean, :default => true
 
   def register
     # convert to symbol for faster comparisons
@@ -61,7 +61,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
     end
 
     epoch_array = []
-    if @timestamp_prefix
+    if @add_timestamp_prefix
       epoch = event[@timestamp_field].to_i
       epoch_array = []
       epoch_array.push(epoch >> 24)

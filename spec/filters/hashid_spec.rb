@@ -10,7 +10,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'MD5'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
         }
       }
     CONFIG
@@ -26,7 +26,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'MD5'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
           hash_bytes_used => 12
         }
       }
@@ -43,7 +43,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA1'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
         }
       }
     CONFIG
@@ -59,7 +59,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA1'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
           hash_bytes_used => 12
         }
       }
@@ -76,7 +76,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA256'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
         }
       }
     CONFIG
@@ -92,7 +92,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA256'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
           hash_bytes_used => 12
         }
       }
@@ -109,7 +109,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA384'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
         }
       }
     CONFIG
@@ -125,7 +125,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA384'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
           hash_bytes_used => 12
         }
       }
@@ -142,7 +142,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA512'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
         }
       }
     CONFIG
@@ -158,7 +158,7 @@ describe LogStash::Filters::Hashid do
         hashid {
           source => ['message']
           method => 'SHA512'
-          timestamp_prefix => false
+          add_timestamp_prefix => false
           hash_bytes_used => 12
         }
       }
@@ -178,7 +178,7 @@ describe LogStash::Filters::Hashid do
           hashid {
             source => ['message']
             method => 'MD5'
-            timestamp_prefix => true
+            add_timestamp_prefix => true
           }
         }
       CONFIG
@@ -194,7 +194,7 @@ describe LogStash::Filters::Hashid do
           hashid {
             source => ['part1','part2']
             method => 'MD5'
-            timestamp_prefix => true
+            add_timestamp_prefix => true
           }
         }
       CONFIG
@@ -210,7 +210,7 @@ describe LogStash::Filters::Hashid do
           hashid {
             source => ['part2','part1']
             method => 'MD5'
-            timestamp_prefix => true
+            add_timestamp_prefix => true
           }
         }
       CONFIG
@@ -226,7 +226,7 @@ describe LogStash::Filters::Hashid do
           hashid {
             source => ['@timestamp','message']
             method => 'MD5'
-            timestamp_prefix => true
+            add_timestamp_prefix => true
           }
         }
       CONFIG
@@ -242,7 +242,7 @@ describe LogStash::Filters::Hashid do
           hashid {
             source => ['message']
             method => 'MD5'
-            timestamp_prefix => true
+            add_timestamp_prefix => true
             hash_bytes_used => 12
           }
         }
@@ -260,7 +260,7 @@ describe LogStash::Filters::Hashid do
             source => ['message']
             method => 'MD5'
             timestamp_field => "ts"
-            timestamp_prefix => true
+            add_timestamp_prefix => true
             hash_bytes_used => 12
           }
         }
