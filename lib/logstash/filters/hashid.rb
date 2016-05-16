@@ -80,15 +80,15 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   def select_digest(method)
     case method
     when :SHA1
-      OpenSSL::Digest::SHA1.new
+      OpenSSL::Digest::SHA1
     when :SHA256
-      OpenSSL::Digest::SHA256.new
+      OpenSSL::Digest::SHA256
     when :SHA384
-      OpenSSL::Digest::SHA384.new
+      OpenSSL::Digest::SHA384
     when :SHA512
-      OpenSSL::Digest::SHA512.new
+      OpenSSL::Digest::SHA512
     when :MD5
-      OpenSSL::Digest::MD5.new
+      OpenSSL::Digest::MD5
     else
       # we really should never get here
       raise(LogStash::ConfigurationError, "Unknown digest for method=#{method.to_s}")
