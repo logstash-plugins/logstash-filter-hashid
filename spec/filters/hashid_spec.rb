@@ -253,23 +253,6 @@ describe LogStash::Filters::Hashid do
       end
     end
 
-    describe '12 byte MD5 with custom timestamp field used for prefix' do
-      config <<-CONFIG
-        filter {
-          hashid {
-            source => ['message']
-            method => 'MD5'
-            timestamp_field => 'ts'
-            add_timestamp_prefix => true
-            hash_bytes_used => 12
-          }
-        }
-      CONFIG
-
-      sample("ts" => epoch_time, "message" => "testmessage") do
-        insist { subject.get("hashid") } == 'KcMScCbSbOQ81JSd3HmPFk'
-      end
-    end
   end
 
 end

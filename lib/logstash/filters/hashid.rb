@@ -21,9 +21,6 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   # Source field(s) to base the hash calculation on
   config :source, :validate => :array, :default => ['message']
 
-  # Timestamp field to use for the timestamp prefix
-  config :timestamp_field, :validate => :string, :default => '@timestamp'
-
   # Target field.
   # Will overwrite current value of a field if it exists.
   config :target, :validate => :string, :default => 'hashid'
@@ -65,7 +62,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
 
     epoch_array = []
     if @add_timestamp_prefix
-      epoch = event.get(@timestamp_field).to_i
+      epoch = event.get('@timestamp').to_i
       epoch_array.push(epoch >> 24)
       epoch_array.push((epoch >> 16) % 256)
       epoch_array.push((epoch >> 8) % 256)
