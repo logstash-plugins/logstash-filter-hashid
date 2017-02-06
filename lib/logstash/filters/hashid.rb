@@ -21,9 +21,6 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   # Source field(s) to base the hash calculation on
   config :source, :validate => :array, :default => ['message']
 
-  # Timestamp field to use for the timestamp prefix
-  config :timestamp_field, :validate => :string, :default => '@timestamp'
-
   # Target field.
   # Will overwrite current value of a field if it exists.
   config :target, :validate => :string, :default => 'hashid'
@@ -54,7 +51,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
     hmac = OpenSSL::HMAC.new(@key, @digest.new)
 
     @source.sort.each do |k|
-      hmac.update("|#{k}|#{event[k]}") 
+      hmac.update("|#{k}|#{event.get(k)}") 
     end
 
     hash = hmac.digest
@@ -65,7 +62,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
 
     epoch_array = []
     if @add_timestamp_prefix
-      epoch = event[@timestamp_field].to_i
+      epoch = event.get('@timestamp').to_i
       epoch_array.push(epoch >> 24)
       epoch_array.push((epoch >> 16) % 256)
       epoch_array.push((epoch >> 8) % 256)
@@ -74,7 +71,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
 
     binary_array = epoch_array + hash.unpack('C*')
 
-    event[@target] = encode_to_sortable_string(binary_array).force_encoding(Encoding::UTF_8)
+    event.set(@target, encode_to_sortable_string(binary_array).force_encoding(Encoding::UTF_8))
   end
 
   def select_digest(method)
