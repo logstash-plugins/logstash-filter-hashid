@@ -26,7 +26,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   config :target, :validate => :string, :default => 'hashid'
 
   # Encryption key to be used when generating cryptographic hashes
-  config :key, :validate => :string, :default => 'hashid'
+  config :key, :validate => :password, :default => 'hashid'
 
   # Hash function to use
   config :method, :validate => ['SHA1', 'SHA256', 'SHA384', 'SHA512', 'MD5'], :default => 'MD5'
@@ -48,7 +48,7 @@ class LogStash::Filters::Hashid < LogStash::Filters::Base
   end
 
   def filter(event)
-    hmac = OpenSSL::HMAC.new(@key, @digest.new)
+    hmac = OpenSSL::HMAC.new(@key.value, @digest.new)
 
     @source.sort.each do |k|
       hmac.update("|#{k}|#{event.get(k)}") 
