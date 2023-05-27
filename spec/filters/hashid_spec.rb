@@ -5,6 +5,8 @@ require "logstash/filters/hashid"
 
 describe LogStash::Filters::Hashid do
 
+  let(:plugin) { described_class.new(config) }
+
   describe 'Full MD5, no timestamp prefix' do
     config <<-CONFIG
       filter {
@@ -256,4 +258,14 @@ describe LogStash::Filters::Hashid do
 
   end
 
+  describe "debugging key" do
+    let(:config) {{ "key" => "$ecre&-key" }}
+
+    it "should not show origin value" do
+      expect(plugin.logger).to receive(:debug).with('<password>')
+
+      plugin.register
+      plugin.logger.send(:debug, plugin.key.to_s)
+    end
+  end
 end
