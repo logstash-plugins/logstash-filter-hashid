@@ -43,7 +43,7 @@ This plugin supports the following configuration options plus the <<plugins-{typ
 |Setting |Input type|Required
 | <<plugins-{type}s-{plugin}-add_timestamp_prefix>> |<<boolean,boolean>>|No
 | <<plugins-{type}s-{plugin}-hash_bytes_used>> |<<number,number>>|No
-| <<plugins-{type}s-{plugin}-key>> |<<string,string>>|No
+| <<plugins-{type}s-{plugin}-key>> |<<password,password>>|No
 | <<plugins-{type}s-{plugin}-method>> |<<string,string>>, one of `["SHA1", "SHA256", "SHA384", "SHA512", "MD5"]`|No
 | <<plugins-{type}s-{plugin}-source>> |<<array,array>>|No
 | <<plugins-{type}s-{plugin}-target>> |<<string,string>>|No
@@ -74,7 +74,7 @@ If not specified, the full hash will be used
 [id="plugins-{type}s-{plugin}-key"]
 ===== `key` 
 
-  * Value type is <<string,string>>
+  * Value type is <<password,password>>
   * Default value is `"hashid"`
 
 Encryption key to be used when generating cryptographic hashes
