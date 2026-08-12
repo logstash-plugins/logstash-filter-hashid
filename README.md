@@ -1,5 +1,6 @@
 # Logstash Plugin
 
+[![Unit Tests](https://github.com/logstash-plugins/logstash-filter-hashid/actions/workflows/unit-tests.yml/badge.svg?branch=main)](https://github.com/logstash-plugins/logstash-filter-hashid/actions/workflows/unit-tests.yml)
 [![Build
 Status](http://build-eu-00.elastic.co/view/LS%20Plugins/view/LS%20Filters/job/logstash-plugin-filter-fingerprint-unit/badge/icon)](http://build-eu-00.elastic.co/view/LS%20Plugins/view/LS%20Filters/job/logstash-plugin-filter-fingerprint-unit/)
 
@@ -87,4 +88,3 @@ Programming is not a required skill. Whatever you've seen about open source and 
 It is more important to the community that you are able to contribute.
 
 For more information about contributing, see the [CONTRIBUTING](https://github.com/elastic/logstash/blob/master/CONTRIBUTING.md) file.
-
